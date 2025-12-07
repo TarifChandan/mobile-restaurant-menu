@@ -22,4 +22,6 @@ const menuArray = [
   },
 ];
 
-export default menuArray;
+const savedOrders = [];
+
+export { menuArray, savedOrders };
