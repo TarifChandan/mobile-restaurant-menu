@@ -204,6 +204,18 @@ main {
   font-weight: 700;
 }
 
+/* Utility */
+
 .hidden {
   display: none;
+}
+
+.payment-successful {
+  color: #065f46;
+  border-radius: 3px;
+  background-color: #ecfdf5;
+  margin-top: 2.7rem;
+  padding: 3rem 3.2rem;
+  font-size: 1.3rem;
+  font-weight: 500;
 }
