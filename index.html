@@ -79,10 +79,15 @@
       <div class="modal-inner">
         <span>Enter card details</span>
         <form>
-          <input type="text" placeholder="Enter your name" />
-          <input type="number" placeholder="Enter card number" />
-          <input type="number" placeholder="Enter CVV" />
-          <button>Pay</button>
+          <input
+            id="username"
+            type="text"
+            placeholder="Enter your name"
+            required
+          />
+          <input type="number" placeholder="Enter card number" required />
+          <input type="number" placeholder="Enter CVV" required />
+          <button class="payment-form-btn">Pay</button>
         </form>
       </div>
     </div>
