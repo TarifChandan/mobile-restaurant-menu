@@ -5,6 +5,14 @@ document.addEventListener("click", function (e) {
     saveOrders(e.target.dataset.menuId);
     renderOrderSummary();
   }
+
+  if (e.target.classList.contains("place-order-btn")) {
+    document.querySelector(".modal").classList.remove("hidden");
+  }
+
+  if (e.target.classList.contains("modal")) {
+    document.querySelector(".modal").classList.add("hidden");
+  }
 });
 
 function saveOrders(selectedItemId) {
