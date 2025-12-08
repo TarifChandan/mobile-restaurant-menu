@@ -13,6 +13,18 @@ document.addEventListener("click", function (e) {
   if (e.target.classList.contains("modal")) {
     document.querySelector(".modal").classList.add("hidden");
   }
+
+  if (e.target.classList.contains("payment-form-btn")) {
+    e.preventDefault();
+
+    const userName = document.querySelector("#username").value;
+    const orderSummaryEl = document.querySelector(".order-summary");
+
+    orderSummaryEl.innerHTML = `Thanks, ${userName}! Your order is on its way!`;
+    orderSummaryEl.classList.add("payment-successful");
+
+    document.querySelector(".modal").classList.add("hidden");
+  }
 });
 
 function saveOrders(selectedItemId) {
@@ -27,7 +39,7 @@ function getOrderSummaryHtml() {
   let totalPrice = 0;
 
   const orderSummaryHtml = savedOrders.map(function (menuItem) {
-    const { name, id, price } = menuItem;
+    const { name, price } = menuItem;
 
     totalPrice += price;
     return `
