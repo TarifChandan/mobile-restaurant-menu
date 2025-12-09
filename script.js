@@ -16,16 +16,29 @@ document.addEventListener("click", function (e) {
 
   if (e.target.classList.contains("payment-form-btn")) {
     e.preventDefault();
+    submitPayment();
+  }
 
-    const userName = document.querySelector("#username").value;
-    const orderSummaryEl = document.querySelector(".order-summary");
+  if (e.target.classList.contains("order-item-remove")) {
+    const removeItemIndex = savedOrders.findIndex((item) => {
+      return item.id === +e.target.dataset.remove;
+    });
 
-    orderSummaryEl.innerHTML = `Thanks, ${userName}! Your order is on its way!`;
-    orderSummaryEl.classList.add("payment-successful");
+    savedOrders.splice(removeItemIndex, 1);
 
-    document.querySelector(".modal").classList.add("hidden");
+    renderOrderSummary();
   }
 });
+
+function submitPayment() {
+  const userName = document.querySelector("#username").value;
+  const orderSummaryEl = document.querySelector(".order-summary");
+
+  orderSummaryEl.innerHTML = `Thanks, ${userName}! Your order is on its way!`;
+  orderSummaryEl.classList.add("payment-successful");
+
+  document.querySelector(".modal").classList.add("hidden");
+}
 
 function saveOrders(selectedItemId) {
   const selectedMenuItemObj = menuArray.find(
@@ -45,12 +58,13 @@ function getOrderSummaryHtml() {
     return `
       <div class="order-item">
           <span class="order-item-name">${name}</span>
-          <button class="order-item-remove">remove</button>
+          <button class="order-item-remove" data-remove="${menuItem.id}">remove</button>
           <span class="order-item-price">$${price}</span>
       </div>`;
   });
 
-  orderSummaryHtml.push(`
+  if (orderSummaryHtml.length > 0) {
+    orderSummaryHtml.push(`
     <div class="order-total">
         <span class="order-total-title">Total price:</span>
         <span class="order-total-price">$${totalPrice}</span>
@@ -59,9 +73,10 @@ function getOrderSummaryHtml() {
     <button class="place-order-btn">Complete order</button>
   `);
 
-  orderSummaryHtml.unshift(
-    `<span class="order-summary-title">Your order</span>`
-  );
+    orderSummaryHtml.unshift(
+      `<span class="order-summary-title">Your order</span>`
+    );
+  }
 
   return orderSummaryHtml.join("");
 }
