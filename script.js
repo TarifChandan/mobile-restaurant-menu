@@ -1,4 +1,4 @@
-import { menuArray, savedOrders } from "/data.js";
+import menuArray from "/data.js";
 
 document.addEventListener("click", function (e) {
   if (e.target.classList.contains("menu-card-add-btn")) {
@@ -20,11 +20,11 @@ document.addEventListener("click", function (e) {
   }
 
   if (e.target.classList.contains("order-item-remove")) {
-    const removeItemIndex = savedOrders.findIndex((item) => {
+    const toBeRemovedObj = menuArray.find(function (item) {
       return item.id === +e.target.dataset.remove;
     });
 
-    savedOrders.splice(removeItemIndex, 1);
+    toBeRemovedObj.quantity--;
 
     renderOrderSummary();
   }
@@ -45,33 +45,59 @@ function saveOrders(selectedItemId) {
     (menuItem) => menuItem.id === +selectedItemId
   );
 
-  savedOrders.push(selectedMenuItemObj);
+  selectedMenuItemObj.quantity++;
 }
 
 function getOrderSummaryHtml() {
   let totalPrice = 0;
 
-  const orderSummaryHtml = savedOrders.map(function (menuItem) {
-    const { name, price } = menuItem;
+  let orderSummaryHtml = menuArray.map(function (menuItem) {
+    const { name, price, quantity } = menuItem;
 
-    totalPrice += price;
-    return `
-      <div class="order-item">
-          <span class="order-item-name">${name}</span>
-          <button class="order-item-remove" data-remove="${menuItem.id}">remove</button>
-          <span class="order-item-price">$${price}</span>
-      </div>`;
+    if (quantity > 0) {
+      totalPrice += price * quantity;
+      return `
+        <div class="order-item">
+            <span class="order-item-name">${name} x${quantity}</span>
+            <button class="order-item-remove" data-remove="${
+              menuItem.id
+            }">remove</button>
+            <span class="order-item-price">$${price * quantity}</span>
+        </div>`;
+    }
   });
 
-  if (orderSummaryHtml.length > 0) {
-    orderSummaryHtml.push(`
-    <div class="order-total">
-        <span class="order-total-title">Total price:</span>
-        <span class="order-total-price">$${totalPrice}</span>
-    </div>
+  orderSummaryHtml = orderSummaryHtml.filter((item) => item !== undefined);
 
-    <button class="place-order-btn">Complete order</button>
-  `);
+  if (orderSummaryHtml.length > 0) {
+    if (orderSummaryHtml.length === 3) {
+      const discount = totalPrice * 0.15;
+      orderSummaryHtml.push(`
+        <div class="section-divider order-subtotal">
+            <span>Subtotal:</span>
+            <span>$${totalPrice}</span>
+        </div>
+        <div class="order-discount">
+            <span>Discount (15%):</span>
+            <span>-$${discount.toFixed(1)}</span>
+        </div>
+        <div class="order-total">
+            <span class="order-total-label">Total price:</span>
+            <span>$${totalPrice - discount}</span>
+        </div>
+
+        <button class="place-order-btn">Complete order</button>
+      `);
+    } else {
+      orderSummaryHtml.push(`
+        <div class="section-divider order-total">
+            <span class="order-total-label">Total price:</span>
+            <span>$${totalPrice}</span>
+        </div>
+
+        <button class="place-order-btn">Complete order</button>
+      `);
+    }
 
     orderSummaryHtml.unshift(
       `<span class="order-summary-title">Your order</span>`
@@ -85,11 +111,11 @@ function renderOrderSummary() {
   document.querySelector(".order-summary").innerHTML = getOrderSummaryHtml();
 }
 
-function getMenuHtml() {
-  return menuArray
-    .map(function (menuItem) {
-      const { name, ingredients, id, price, emoji } = menuItem;
-      return `<div class="menu-card">
+function getMainHtml() {
+  const mainHtml = menuArray.map(function (menuItem) {
+    const { name, ingredients, id, price, emoji } = menuItem;
+    return `
+      <div class="menu-card">
           <div class="menu-card-image">${emoji}</div>
           <div class="menu-card-details">
             <span class="menu-card-title">${name}</span>
@@ -100,12 +126,17 @@ function getMenuHtml() {
             <button class="menu-card-add-btn" data-menu-id="${id}">+</button>
           </div>
         </div>`;
-    })
-    .join("");
+  });
+
+  mainHtml.unshift(
+    `<p class="discount-msg">Order three items together and get 15% off!</p>`
+  );
+
+  return mainHtml.join("");
 }
 
 function renderMenu() {
-  document.querySelector(".menu-container").innerHTML = getMenuHtml();
+  document.querySelector(".menu-container").innerHTML = getMainHtml();
 }
 
 renderMenu();

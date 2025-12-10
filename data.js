@@ -5,6 +5,7 @@ const menuArray = [
     id: 0,
     price: 14,
     emoji: "🍕",
+    quantity: 0,
   },
   {
     name: "Hamburger",
@@ -12,6 +13,7 @@ const menuArray = [
     price: 12,
     emoji: "🍔",
     id: 1,
+    quantity: 0,
   },
   {
     name: "Beer",
@@ -19,9 +21,10 @@ const menuArray = [
     price: 12,
     emoji: "🍺",
     id: 2,
+    quantity: 0,
   },
 ];
 
 const savedOrders = [];
 
-export { menuArray, savedOrders };
+export default menuArray;

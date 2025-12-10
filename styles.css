@@ -49,6 +49,19 @@ main {
   background-color: #fff;
 }
 
+/* Discount Msg */
+.discount-msg {
+  color: #065f46;
+  border-radius: 3px;
+  background-color: #ecfdf5;
+  text-align: center;
+  font-weight: 500;
+  padding: 0.7rem 1rem;
+  width: 85%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+
 /* Menu Card */
 
 .menu-card {
@@ -122,8 +135,7 @@ main {
   margin-bottom: 1rem;
 }
 
-.order-item-name,
-.order-total-title {
+.order-item-name {
   font-size: 1.3rem;
 }
 
@@ -135,11 +147,31 @@ main {
   font-size: 0.9rem;
 }
 
-.order-total {
+.section-divider {
   border-top: 2px solid #393333;
-  margin-top: 1.8rem;
+  margin-top: 1.6rem;
   padding-top: 1rem;
+  margin-bottom: 8px;
+}
+
+.order-discount {
+  margin-bottom: 1.5rem;
+}
+
+.order-subtotal,
+.order-discount {
   display: flex;
+  justify-content: space-between;
+  color: #5c5c5c;
+}
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+}
+
+.order-total-label {
+  font-size: 1.3rem;
 }
 
 .place-order-btn {
@@ -218,4 +250,5 @@ main {
   padding: 3rem 3.2rem;
   font-size: 1.3rem;
   font-weight: 500;
+  text-align: center;
 }
