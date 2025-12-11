@@ -20,24 +20,42 @@ document.addEventListener("click", function (e) {
   }
 
   if (e.target.classList.contains("order-item-remove")) {
-    const toBeRemovedObj = menuArray.find(function (item) {
-      return item.id === +e.target.dataset.remove;
-    });
+    removeOrderItem(+e.target.dataset.remove);
+  }
 
-    toBeRemovedObj.quantity--;
-
-    renderOrderSummary();
+  if (e.target.classList.contains("review-btn")) {
+    submitReview();
+    closeReviewModal();
+    document.querySelector("main").style.pointerEvents = "none";
   }
 });
 
-function submitPayment() {
-  const userName = document.querySelector("#username").value;
-  const orderSummaryEl = document.querySelector(".order-summary");
+function getMainHtml() {
+  const mainHtml = menuArray.map(function (menuItem) {
+    const { name, ingredients, id, price, emoji } = menuItem;
+    return `
+      <div class="menu-card">
+          <div class="menu-card-image">${emoji}</div>
+          <div class="menu-card-details">
+            <span class="menu-card-title">${name}</span>
+            <p class="menu-card-description">${ingredients.join(", ")}</p>
+            <span class="menu-card-price">$${price}</span>
+          </div>
+          <div class="menu-card-actions">
+            <button class="menu-card-add-btn" data-menu-id="${id}">+</button>
+          </div>
+        </div>`;
+  });
 
-  orderSummaryEl.innerHTML = `Thanks, ${userName}! Your order is on its way!`;
-  orderSummaryEl.classList.add("payment-successful");
+  mainHtml.unshift(
+    `<p class="discount-msg">Order three items together and get 15% off!</p>`
+  );
 
-  document.querySelector(".modal").classList.add("hidden");
+  return mainHtml.join("");
+}
+
+function renderMenu() {
+  document.querySelector(".menu-container").innerHTML = getMainHtml();
 }
 
 function saveOrders(selectedItemId) {
@@ -111,32 +129,52 @@ function renderOrderSummary() {
   document.querySelector(".order-summary").innerHTML = getOrderSummaryHtml();
 }
 
-function getMainHtml() {
-  const mainHtml = menuArray.map(function (menuItem) {
-    const { name, ingredients, id, price, emoji } = menuItem;
-    return `
-      <div class="menu-card">
-          <div class="menu-card-image">${emoji}</div>
-          <div class="menu-card-details">
-            <span class="menu-card-title">${name}</span>
-            <p class="menu-card-description">${ingredients.join(", ")}</p>
-            <span class="menu-card-price">$${price}</span>
-          </div>
-          <div class="menu-card-actions">
-            <button class="menu-card-add-btn" data-menu-id="${id}">+</button>
-          </div>
-        </div>`;
+function removeOrderItem(targetId) {
+  const toBeRemovedObj = menuArray.find(function (item) {
+    return item.id === targetId;
   });
 
-  mainHtml.unshift(
-    `<p class="discount-msg">Order three items together and get 15% off!</p>`
-  );
+  toBeRemovedObj.quantity--;
 
-  return mainHtml.join("");
+  renderOrderSummary();
 }
 
-function renderMenu() {
-  document.querySelector(".menu-container").innerHTML = getMainHtml();
+function submitPayment() {
+  const userName = document.querySelector("#username").value;
+  const orderSummaryEl = document.querySelector(".order-summary");
+
+  orderSummaryEl.innerHTML = `Thanks, ${userName}! Your order is on its way!`;
+  orderSummaryEl.classList.add("payment-successful");
+
+  document.querySelector(".modal").classList.add("hidden");
+
+  openReviewModal();
+}
+
+function openReviewModal() {
+  setTimeout(function () {
+    document
+      .querySelector(".modal-review-container")
+      .classList.remove("hidden");
+  }, 1000);
+}
+
+function submitReview() {
+  const selectedReview = document.querySelector(
+    ".rating input[type='radio']:checked"
+  ).value;
+
+  document.querySelector(".modal-review").innerHTML = `
+    <p class="review-success-msg">
+      <span>🎉</span> 
+      Thanks for the ${selectedReview}-star rating! We appreciate you helping us improve.
+    </p>`;
+}
+
+function closeReviewModal() {
+  setTimeout(function () {
+    document.querySelector(".modal-review-container").classList.add("hidden");
+  }, 1800);
 }
 
 renderMenu();
