@@ -1,4 +1,4 @@
-import menuArray from "./data.js";
+import menuArray from "data.js";
 
 document.addEventListener("click", function (e) {
   if (e.target.classList.contains("menu-card-add-btn")) {
